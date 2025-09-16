@@ -57,6 +57,24 @@ module "nic" {
 
 }
 
+module "network_security_group" {
+  for_each                = var.nsg_config
+  depends_on              = [module.resource_group, module.virtual_network, module.subnet, module.nic]
+  source                  = "../../modules/azurerm_network_security_group"
+  resource_group_name     = var.resource_group_name
+  resource_group_location = var.resource_group_location
+  nsg_name                = each.value.nsg_name
+
+}
+module "network_security_group_association" {
+  for_each            = var.nsg_config
+  depends_on          = [module.resource_group, module.virtual_network, module.subnet, module.nic, module.network_security_group]
+  source              = "../../modules/azurerm_network_security_group_association"
+  nsg_name            = each.value.nsg_name
+  resource_group_name = var.resource_group_name
+  nic_name            = each.value.nic_name
+
+}
 module "virtual_machine" {
   depends_on             = [module.resource_group, module.virtual_network, module.subnet, module.nic]
   for_each               = var.vm_config

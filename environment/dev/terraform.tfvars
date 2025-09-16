@@ -79,9 +79,27 @@ vm_config = {
     custom_data    = <<-EOF
         #!/bin/bash
         sudo apt update
-        sudo apt install -y python3 python3-pip
+        sudo apt install -y nginx
+        sudo systemctl enable nginx
+        sudo systemctl start nginx
       EOF
 
   }
 }
 virtual_machine_location = "northeurope"
+
+nsg_config = {
+  "nsgfrontend1" = {
+    nic_name = "nic-frontend1"
+    nsg_name = "nsg-frontend1"
+  }
+  "nsgfrontend2" = {
+    nic_name = "nic-frontend2"
+    nsg_name = "nsg-frontend1"
+  }
+
+  "nsgbackend" = {
+    nic_name = "nic-backend"
+    nsg_name = "nsg-backend"
+  }
+}

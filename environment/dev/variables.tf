@@ -47,3 +47,7 @@ variable "virtual_machine_location" {
   description = "The location of the virtual machine"
   type        = string
 }
+variable "nsg_config" {
+  type = map(any)
+
+}
